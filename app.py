@@ -32,12 +32,12 @@ async def fetch(session, url, data):
     async with session.post(url, data=data) as response:
         return await response.text()
 
-async def main(image_data: str):
+async def main(image_data: str, prompt: str = "Explain the image."):
     url = "http://8.12.5.48:11434/api/generate"
     data = json.dumps(
         {
             "model": "llava:7b-v1.6-mistral-q5_K_M",
-            "prompt": "Can you explain this equation. I have doubt in this",
+            "prompt": prompt,
             "stream": False,
             "images": [image_data]
         }
@@ -79,6 +79,12 @@ def signup():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
+        confirm_password = request.form['confirm-password']
+        print(confirm_password)
+        if password != confirm_password:
+            flash('Passwords do not match', 'error')
+            return redirect(url_for('signup'))
+        
         if not User.query.filter_by(username=username).first():
             new_user = User(username=username, password=generate_password_hash(password))
             db.session.add(new_user)
@@ -108,14 +114,12 @@ def process_image():
     # If a question type is selected, use it. Otherwise, use the manually input question
     if question_type:
         question = question_type
-    print(question)
     # Run asynchronous task
-    response = asyncio.run(main(image_data))
+    response = asyncio.run(main(image_data, question))
     response = json.loads(response)
-    print(response["response"])
     return jsonify({'result': response["response"], 'question': question})
 
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
-    app.run(debug=True)
+    app.run(debug=True, port=5000)
