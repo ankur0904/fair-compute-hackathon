@@ -17,8 +17,12 @@ The Image Analyser is a web application designed to allow users to upload images
 3. **Travel Planning:** Travelers can upload images of destinations or attractions and ask questions about accommodations, activities, or local information.
 4. **Medical Assistance:** Patients can upload medical images and ask questions about symptoms, diagnoses, or treatment options.
 **(sky is the limit)etc**
-**Technologies Used:**
 
+**Architecture**
+![WhatsApp Image 2024-04-07 at 00 53 19](https://github.com/ankur0904/fair-compute-hackathon/assets/98346896/1b56043e-44a8-4078-b2bf-d7516da769c0)
+
+
+**Technologies Used:**
 - Flask: Python web framework for building the backend server.
 - HTML/CSS/JavaScript: Frontend development for the user interface.
 - Fair Compute: for accessing llava:7b-v1.6-mistral-q5_K_M model endpoints
