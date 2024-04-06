@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Upload</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/css/style.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Upload Image</h2>
+        <form id="imageForm" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <input type="file" name="image" id="imageInput" class="form-control-file">
+                <!-- Image preview container -->
+                <div id="imagePreview" class="mt-2 h2"></div>
+            </div>
+            <div class="form-group">
+                <label for="questionType">Select or Write Your Question:</label>
+                <select name="questionType" id="questionType" class="form-control">
+                    <option value="" selected disabled>Select or Write Your Question</option>
+                    <option value="Explain me the piece of code">Explain me the piece of code in this image</option>
+                    <option value="Tell me about the image">Tell me about the image</option>
+                    <option value="Which flower is in the images?">Which flower is in the images?</option>
+                    <option value="Explain the equation in the image.">Explain the equation in the image.</option>
+                    <option value="What is the name of the person in the image?">What is the name of the person in the image?</option>
+                    <option value="Tell me about the place in the image">Tell me about the place</option>
+                </select>
+                <textarea name="question" id="questionInput" class="form-control mt-2" rows="4" placeholder="Or write your question here..."></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+        <div id="result" class="mt-3"></div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $('#imageInput').change(function(){
+                var input = this;
+                var url = window.URL || window.webkitURL;
+                var image = new Image();
+                // Add class name to the dynamically created img tag
+                image.className = 'image';
+                image.onload = function() {
+                    $('#imagePreview').html(image);
+                };
+                image.src = url.createObjectURL(input.files[0]);
+            });
+
+            $('#imageForm').submit(function(e){
+                e.preventDefault();
+                var formData = new FormData(this);
+                $.ajax({
+                    type: 'POST',
+                    url: '/process_image',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response){
+                        $('#result').html(response.result);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
